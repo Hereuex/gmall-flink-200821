@@ -59,7 +59,7 @@ public class DimUtil {
         //查询phoenix中的维度数据
         List<JSONObject> queryList = PhoenixUtil.queryList(querySql, JSONObject.class);
         JSONObject dimJsonObj = queryList.get(0);
-        
+
 
         return dimJsonObj;
     }
