@@ -7,6 +7,7 @@ import redis.clients.jedis.Jedis;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Hereuex
@@ -39,14 +40,15 @@ public class DimUtil {
             //判断如果不是最后一个条件，则添加"and"
             if (i < columnValues.length - 1) {
                 whereSql.append(" and ");
-
-
+                redisKey.append(":");
             }
         }
 
+        //获取Redis连接
         Jedis jedis = RedisUtil.getJedis();
         String dimJsonStr = jedis.get(redisKey.toString());
 
+        //是否从Redis中查询到数据
         if (dimJsonStr != null && dimJsonStr.length() > 0) {
             jedis.close();
             return JSON.parseObject(dimJsonStr);
@@ -60,13 +62,26 @@ public class DimUtil {
         List<JSONObject> queryList = PhoenixUtil.queryList(querySql, JSONObject.class);
         JSONObject dimJsonObj = queryList.get(0);
 
-
         return dimJsonObj;
     }
 
 
     public static JSONObject getDimInfo(String tableName, String value) {
         return getDimInfo(tableName, new Tuple2<>("id", value));
+    }
+
+    //根据Key让redis中的缓存失效
+    public static void deleteCached(String tableName,String id){
+        String key = tableName.toUpperCase() + ":" + id;
+
+        try {
+            Jedis jedis = RedisUtil.getJedis();
+            jedis.del(key);
+            jedis.close();
+        } catch (Exception e) {
+            System.out.println("缓存异常！");
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

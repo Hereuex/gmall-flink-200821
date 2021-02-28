@@ -54,7 +54,7 @@ public class DbBaseApp {
         });
 
         //打印测试
-        filterDS.print();
+        //filterDS.print();
 
         //5.分流,ProcessFunction
         OutputTag<JSONObject> hbaseTag = new OutputTag<JSONObject>(TableProcess.SINK_TYPE_HBASE) {
@@ -83,6 +83,9 @@ public class DbBaseApp {
             }
         });
         kafkaJsonDS.addSink(kafkaSinkBySchema);
+
+        hbaseJsonDS.print("HBase>>>>>>>>");
+        kafkaJsonDS.print("Kafka>>>>>>>>");
         //7.执行任务
         env.execute();
 
