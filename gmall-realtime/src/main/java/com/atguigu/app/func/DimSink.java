@@ -2,6 +2,7 @@ package com.atguigu.app.func;
 
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.common.GmallConfig;
+import com.atguigu.utils.DimUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -57,6 +58,11 @@ public class DimSink extends RichSinkFunction<JSONObject> {
 
             //提交
             connection.commit();
+
+            String type = jsonObject.getString("type");
+            if ("update".equals(type)){
+                DimUtil.deleteCached(tableName, data.getString("id"));
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
