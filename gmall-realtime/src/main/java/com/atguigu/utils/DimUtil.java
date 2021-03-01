@@ -37,6 +37,8 @@ public class DimUtil {
             String value = columnValue.f1;
             whereSql.append(column).append("='").append(value).append("'");
 
+            redisKey.append(value);
+
             //判断如果不是最后一个条件，则添加"and"
             if (i < columnValues.length - 1) {
                 whereSql.append(" and ");
@@ -61,6 +63,11 @@ public class DimUtil {
         //查询phoenix中的维度数据
         List<JSONObject> queryList = PhoenixUtil.queryList(querySql, JSONObject.class);
         JSONObject dimJsonObj = queryList.get(0);
+
+        //将数据写入Redis
+        jedis.set(redisKey.toString(),dimJsonObj.toString());
+        jedis.expire(redisKey.toString(), 24*60*60);
+        jedis.close();
 
         return dimJsonObj;
     }
