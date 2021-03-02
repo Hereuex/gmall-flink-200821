@@ -7,8 +7,6 @@ import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.runtime.state.filesystem.FsStateBackend;
-import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
@@ -67,9 +65,9 @@ public class LogBaseApp {
         });
 
         //打印测试
-        //        pageDS.print("Page>>>>>>>>>>>>");
-        //        startDS.print("Start>>>>>>>>>>>");
-        //        displayDS.print("Display>>>>>>>>>");
+        pageDS.print("Page>>>>>>>>>>>>");
+        startDS.print("Start>>>>>>>>>>>");
+        displayDS.print("Display>>>>>>>>>");
         pageDS.addSink(MyKafkaUtil.getKafkaSink("dwd_page_log"));
         startDS.addSink(MyKafkaUtil.getKafkaSink("dwd_start_log"));
         displayDS.addSink(MyKafkaUtil.getKafkaSink("dwd_display_log"));

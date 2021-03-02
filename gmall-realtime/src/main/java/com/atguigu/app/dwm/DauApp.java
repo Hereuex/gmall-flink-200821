@@ -3,7 +3,6 @@ package com.atguigu.app.dwm;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.atguigu.utils.MyKafkaUtil;
-import com.sun.media.sound.SF2InstrumentRegion;
 import org.apache.flink.api.common.functions.RichFilterFunction;
 import org.apache.flink.api.common.state.StateTtlConfig;
 import org.apache.flink.api.common.state.ValueState;
@@ -70,6 +69,7 @@ public class DauApp {
         SingleOutputStreamOperator<JSONObject> filterDS = keyedStream.filter(new UvRichFilterFunction());
 
         //6、写入DWM层Kafka主题
+        filterDS.print(">>>>>>>>>>>>");
         filterDS.map(JSON::toString).addSink(MyKafkaUtil.getKafkaSink(sinkTopic));
 
         //7、启动任务
