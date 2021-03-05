@@ -1,14 +1,12 @@
 package com.atguigu.app.func;
 
 import com.alibaba.fastjson.JSONObject;
-import com.atguigu.bean.OrderWide;
 import com.atguigu.utils.DimUtil;
 import com.atguigu.utils.ThreadPoolUtil;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -49,8 +47,8 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T, T> implem
                 //2、关联到事实数据上
                 if (dimInfo != null && dimInfo.size() > 0) {
                     try {
-                        join(input,dimInfo);
-                    }catch (Exception e){
+                        join(input, dimInfo);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -65,7 +63,4 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T, T> implem
 
     }
 
-    public abstract String getKey(OrderWide orderWide);
-
-    public abstract void join(OrderWide orderWide, JSONObject dimInfo) throws ParseException, Exception;
 }
